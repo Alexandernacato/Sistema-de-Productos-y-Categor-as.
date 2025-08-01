@@ -1,0 +1,48 @@
+<app-nav></app-nav>
+
+<h2 style="text-align: center; margin-top: 1rem;">📂 Catálogo de Categorías</h2>
+
+<div class="catalogo">
+  <app-categories
+    [categories]="categorias"
+    [searchTerm]="searchTerm"
+    (onNuevo)="abrirModalParaNuevo()"
+    (onEditar)="abrirModalParaEditar($event)"
+    (onEliminar)="eliminarCategoria($event)"
+  ></app-categories>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="mostrarModal">
+  <div class="modal">
+    <h3 class="modal-title">{{ categoriaSeleccionada.id ? 'Editar Categoría' : 'Nueva Categoría' }}</h3>
+    <form (ngSubmit)="guardarCategoria()" #form="ngForm">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          placeholder="Nombre"
+          [(ngModel)]="categoriaSeleccionada.nombre"
+          name="nombre"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea
+          id="descripcion"
+          placeholder="Descripción"
+          [(ngModel)]="categoriaSeleccionada.descripcion"
+          name="descripcion"
+        ></textarea>
+      </div>
+
+      <div class="modal-buttons">
+        <button type="submit" class="btn btn-create" [disabled]="form.invalid">💾 Guardar</button>
+        <button type="button" class="btn btn-cancel" (click)="cerrarModal()">❌ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
