@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.prueba.prueba.Client.CategoryClient;
+import com.example.prueba.prueba.Client.CategoryDTO;
 import com.example.prueba.prueba.Model.Products;
 //Spring pueda utlizar esta clase como co un componente paraq que me epermita usar una inyeccion de depsnedencias
 import com.example.prueba.prueba.Repository.ProductRepository;
@@ -20,9 +22,13 @@ import jakarta.transaction.Transactional;
 public class ProductsServiceImplement implements ProductsService {
 
     private final ProductRepository productRepository;
+    private final CategoryClient categoryClient;
     // Inyección de dependencias del repositorio de productos
-    public ProductsServiceImplement(ProductRepository productRepository) {
+    public ProductsServiceImplement(ProductRepository productRepository, CategoryClient categoryClient) {
         this.productRepository = productRepository;
+        this.categoryClient = categoryClient; // Inicializa el cliente de categoría, se puede inyectar si es necesario
+      
+       // Inicializa el cliente de categoría, se puede inyectar si es necesario
     }
 
     @Override
@@ -37,11 +43,20 @@ public class ProductsServiceImplement implements ProductsService {
         return productRepository.findById(id);
     }
 
-    @Override
+     @Override
     public Products createProduct(Products product) {
-        // Crea un nuevo producto y lo guarda en la base de datos
+        if (product.getCategoryid() == null) {
+            throw new RuntimeException("Category ID must not be null");
+        }
+
+        CategoryDTO category = categoryClient.getCategoryById(product.getCategoryid());
+        if (category == null) {
+            throw new RuntimeException("Category not found with ID: " + product.getCategoryid());
+        }
+
         return productRepository.save(product);
     }
+   
 
     @Override
     public Products updateProduct(Long id, Products product) {

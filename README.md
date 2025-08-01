@@ -34,4 +34,3 @@ docker compose up --build
 # Luego accede a:
 # http://localhost:8081   → Microservicio 'prueba'
 # http://localhost:8084   → Microservicio 'categoria'
-"# Sistema-de-Productos-y-Categor-as." 

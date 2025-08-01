@@ -32,6 +32,7 @@ services:
       - mysql
     networks:
       - backend
+  
 
   categoria:
     build: ./categoria
